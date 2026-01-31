@@ -1,6 +1,6 @@
 import type { ReactElement } from 'react';
-import { getTheme } from '../themes/eraThemes';
-import { getEraName } from '../utils/parseTime';
+import { getTheme } from '@/lib/themes';
+import { getEraName } from '@/lib/parseTime';
 import type { EraDisplayProps, EraTheme } from '@/types';
 
 export function EraDisplay({ journey, onReset }: EraDisplayProps): ReactElement | null {

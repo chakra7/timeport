@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import type { FormEvent, ReactElement } from 'react';
-import { parseTime, formatYear } from '../utils/parseTime';
-import { parsePlace } from '../utils/parsePlace';
-import { getEra } from '../utils/parseTime';
-import { fetchPrediction } from '../services/api';
-import { generateData } from '../utils/dataGenerator';
+import { parseTime, formatYear } from '@/lib/parseTime';
+import { parsePlace } from '@/lib/parsePlace';
+import { getEra } from '@/lib/parseTime';
+import { fetchPrediction } from '@/services/api';
+import { generateData } from '@/lib/dataGenerator';
 import type { TimeMachineProps, JourneyData } from '@/types';
 
 export function TimeMachine({ onTravel, isLoading = false }: TimeMachineProps): ReactElement {

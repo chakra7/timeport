@@ -55,7 +55,7 @@ export interface Place {
   terrain: TerrainKey;
   isCoastal: boolean;
   isUrban: boolean;
-  latitude: number;
+ latitude: number;
 }
 
 // Data Types

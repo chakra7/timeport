@@ -1,9 +1,7 @@
 import type { Place, ApiPredictionResponse } from '@/types';
 
-const API_URL = 'http://localhost:3000/api';
-
 export async function fetchPrediction(place: Place, year: number): Promise<ApiPredictionResponse> {
-  const response = await fetch(`${API_URL}/predict`, {
+  const response = await fetch('/api/predict', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
