@@ -36,3 +36,4 @@ timetravel/.env.local
 *.njsproj
 *.sln
 *.sw?
+.next/
