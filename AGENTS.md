@@ -7,7 +7,7 @@ TimePort is a full-stack "Time Travel" web application.
 - **Framework**: Next.js 14 with App Router
 - **Frontend**: React 18, TypeScript, Tailwind CSS
 - **Backend**: Next.js API Routes (serverless)
-- **AI**: Integration with Groq (Llama 3.3 70B) via Vercel AI SDK
+- **AI**: Integration with Groq (Llama 3.3 70B) for text and Pollinations.ai (Free) for images (Gemini Imagen 4 supported but disabled for cost)
 - **Root Directory**: Contains all application source code (flattened structure)
 
 ## 2. Critical Commands
@@ -73,6 +73,7 @@ All commands should be run from the root directory.
 - It uses Next.js built-in environment variable support (no dotenv needed in API routes).
 - It proxies requests to AI providers (Groq) to protect API keys.
 - **API Response**: Ensure AI responses are cleaned and parsed as valid JSON before sending to the client.
+- **Image Generation**: Uses `lib/imageGen.ts` to call Pollinations.ai (Free). Returns image URLs. (Gemini Imagen 4 optional).
 
 ## 5. Directory Structure
 ```text

@@ -68,6 +68,7 @@ export interface EraData {
 
 export interface ApiPredictionResponse extends EraData {
   context: string;
+  imageUrl?: string;
 }
 
 export interface JourneyData {
@@ -77,6 +78,7 @@ export interface JourneyData {
   era: EraKey;
   formattedYear: string;
   context?: string;
+  imageUrl?: string;
 }
 
 // Component Props

@@ -6,7 +6,7 @@ import type { EraDisplayProps, EraTheme } from '@/types';
 export function EraDisplay({ journey, onReset }: EraDisplayProps): ReactElement | null {
   if (!journey) return null;
 
-  const { year, place, data, era, formattedYear, context } = journey;
+  const { year, place, data, era, formattedYear, context, imageUrl } = journey;
   const theme: EraTheme = getTheme(era);
 
   const containerStyle: React.CSSProperties = {
@@ -27,6 +27,7 @@ export function EraDisplay({ journey, onReset }: EraDisplayProps): ReactElement 
     boxShadow: `0 4px 20px ${theme.accentColor}20`,
     width: '100%',
     margin: '0 0 10px',
+    overflow: 'hidden',
   };
 
   const labelStyle: React.CSSProperties = {
@@ -67,6 +68,20 @@ export function EraDisplay({ journey, onReset }: EraDisplayProps): ReactElement 
           ← Travel Again
         </button>
       </div>
+
+      {imageUrl && (
+        <div style={cardStyle}>
+          <div style={labelStyle}>Visualization</div>
+          <div style={styles.imageContainer}>
+            <img 
+              src={imageUrl} 
+              alt={`${place.name} in ${formattedYear}`} 
+              style={styles.image}
+              onError={(e) => (e.currentTarget.style.display = 'none')}
+            />
+          </div>
+        </div>
+      )}
 
       <div style={cardStyle}>
         <div style={labelStyle}>Summary</div>
@@ -140,4 +155,20 @@ const styles: Record<string, React.CSSProperties> = {
     width: '100%',
     margin: '0',
   },
+  imageContainer: {
+    width: '100%',
+    borderRadius: '8px',
+    overflow: 'hidden',
+    marginTop: '10px',
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    aspectRatio: '16/9',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+  }
 };

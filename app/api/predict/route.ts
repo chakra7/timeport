@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { streamText } from 'ai';
 import { groq } from '@ai-sdk/groq';
+import { generateEraImage } from '@/lib/imageGen';
 
 export async function POST(request: NextRequest) {
   try {
@@ -55,7 +56,15 @@ Make the predictions imaginative but grounded in historical trends or logical fu
     const jsonMatch = fullText.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
       const data = JSON.parse(jsonMatch[0]);
-      return NextResponse.json(data);
+      
+      // Generate image based on the context
+      // Note: This adds latency, but provides a better experience
+      const imageUrl = await generateEraImage(`${place.name} in the year ${year}. ${data.context}`);
+      
+      return NextResponse.json({
+        ...data,
+        imageUrl: imageUrl || undefined
+      });
     } else {
       return NextResponse.json({
         weather: "Mild and temperate",
