@@ -4,22 +4,21 @@ import { useState, useEffect, useCallback } from 'react';
 import type { ReactElement, CSSProperties, MouseEvent } from 'react';
 import { getTheme } from '@/lib/themes';
 import { getEraName } from '@/lib/parseTime';
-import type { EraDisplayProps, EraTheme } from '@/types';
+import type { EraDisplayProps, EraTheme, JourneyData } from '@/types';
+import { TimeMachine } from '@/components/TimeMachine';
 
-export function EraDisplay({ journey, onReset }: EraDisplayProps): ReactElement | null {
+export function EraDisplay({ journey, onReset, onTravel }: EraDisplayProps): ReactElement | null {
   const [isUIVisible, setIsUIVisible] = useState(true);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
+  const [showTravelModal, setShowTravelModal] = useState(false);
 
-  if (!journey) return null;
-
-  const { year, place, data, era, formattedYear, context, imageUrl, imageUrls } = journey;
-  const theme: EraTheme = getTheme(era);
+  const theme: EraTheme = getTheme(journey?.era || 'modern');
 
   // Combine single imageUrl and imageUrls array if needed
-  const allImages = imageUrls && imageUrls.length > 0 ? imageUrls : (imageUrl ? [imageUrl] : []);
-  const currentBackground = allImages[0] || imageUrl;
+  const allImages = journey?.imageUrls && journey.imageUrls.length > 0 ? journey.imageUrls : (journey?.imageUrl ? [journey.imageUrl] : []);
+  const currentBackground = allImages[0] || journey?.imageUrl;
 
   const closeModal = useCallback(() => {
     if (isClosing) return;
@@ -29,6 +28,15 @@ export function EraDisplay({ journey, onReset }: EraDisplayProps): ReactElement 
       setIsClosing(false);
     }, 200);
   }, [isClosing]);
+
+  const closeTravelModal = useCallback(() => {
+    setShowTravelModal(false);
+  }, []);
+
+  const handleNewTravel = useCallback((newJourney: JourneyData) => {
+    setShowTravelModal(false);
+    onTravel(newJourney);
+  }, [onTravel]);
 
   const nextImage = useCallback(() => {
     if (allImages.length === 0) return;
@@ -82,6 +90,10 @@ export function EraDisplay({ journey, onReset }: EraDisplayProps): ReactElement 
     setIsUIVisible(true); // Ensure original contents are visible in the background
   }, []);
 
+  if (!journey) return null;
+
+  const { year, place, data, formattedYear, context } = journey;
+
   // Background layers: Base Theme Color -> Image -> Overlay
   const containerStyle: CSSProperties = {
     backgroundColor: theme.bgColor,
@@ -95,13 +107,12 @@ export function EraDisplay({ journey, onReset }: EraDisplayProps): ReactElement 
     width: '100%',
     position: 'relative',
     transition: 'background-image 0.8s ease-in-out, background-color 0.8s ease',
-    cursor: currentBackground ? 'pointer' : 'default',
   };
 
   const overlayStyle: CSSProperties = {
-    backgroundColor: isUIVisible ? 'rgba(0, 0, 0, 0.5)' : 'transparent',
+    backgroundColor: isUIVisible ? 'rgba(10, 15, 24, 0.7)' : 'transparent',
     background: isUIVisible 
-      ? `linear-gradient(to bottom, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.8) 100%)`
+      ? `linear-gradient(to bottom, rgba(10, 15, 24, 0.9) 0%, rgba(10, 15, 24, 0.4) 50%, rgba(10, 15, 24, 0.9) 100%)`
       : 'transparent',
     minHeight: '100vh',
     width: '100%',
@@ -109,7 +120,7 @@ export function EraDisplay({ journey, onReset }: EraDisplayProps): ReactElement 
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    backdropFilter: isUIVisible ? (currentBackground ? 'blur(1px)' : 'none') : 'none',
+    backdropFilter: isUIVisible ? (currentBackground ? 'blur(8px)' : 'none') : 'none',
     transition: 'all 0.5s ease-in-out',
   };
 
@@ -124,16 +135,16 @@ export function EraDisplay({ journey, onReset }: EraDisplayProps): ReactElement 
   };
 
   const cardStyle: CSSProperties = {
-    backgroundColor: 'rgba(0, 0, 0, 0.6)',
-    border: `1px solid ${theme.borderColor}`,
-    borderRadius: '16px',
-    padding: '25px',
-    marginBottom: '20px',
-    boxShadow: `0 10px 40px rgba(0,0,0,0.5)`,
+    backgroundColor: 'rgba(15, 23, 42, 0.65)',
+    border: `1px solid rgba(56, 189, 248, 0.1)`,
+    borderRadius: '24px',
+    padding: '32px',
+    marginBottom: '24px',
+    boxShadow: `0 20px 50px rgba(0,0,0,0.3)`,
     width: '100%',
     maxWidth: '800px',
     overflow: 'hidden',
-    backdropFilter: 'blur(12px)',
+    backdropFilter: 'blur(20px)',
   };
 
   const labelStyle: CSSProperties = {
@@ -175,19 +186,36 @@ export function EraDisplay({ journey, onReset }: EraDisplayProps): ReactElement 
               </div>
             )}
 
-            <button 
-              onClick={(e) => {
-                e.stopPropagation();
-                onReset();
-              }} 
-              style={{ 
-                ...styles.resetButton, 
-                borderColor: theme.accentColor, 
-                color: theme.accentColor 
-              }}
-            >
-              ← Return to Present
-            </button>
+            <div style={styles.buttonContainer}>
+              <button 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onReset();
+                }} 
+                style={{ 
+                  ...styles.resetButton, 
+                  borderColor: theme.accentColor, 
+                  color: theme.accentColor 
+                }}
+              >
+                ← Return Home
+              </button>
+
+              <button 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowTravelModal(true);
+                }} 
+                style={{ 
+                  ...styles.travelButton, 
+                  backgroundColor: theme.accentColor,
+                  borderColor: theme.accentColor,
+                  color: theme.bgColor 
+                }}
+              >
+                New Jump →
+              </button>
+            </div>
           </div>
 
           {/* Image Gallery */}
@@ -290,6 +318,25 @@ export function EraDisplay({ journey, onReset }: EraDisplayProps): ReactElement 
           )}
         </div>
       )}
+
+      {showTravelModal && (
+        <div style={styles.modalContainer} onClick={closeTravelModal}>
+          <div 
+            style={{...styles.travelModalContent, backgroundColor: '#0a0f18'}} 
+            onClick={stopPropagation}
+            className="animate-modal"
+          >
+            <button 
+              style={{...styles.modalCloseButton, color: 'white'}} 
+              onClick={closeTravelModal}
+              aria-label="Close jump coordinates"
+            >
+              &times;
+            </button>
+            <TimeMachine onTravel={handleNewTravel} />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -309,6 +356,9 @@ const styles: Record<string, CSSProperties> = {
     textAlign: 'center',
     marginBottom: '40px',
     width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   title: {
     fontSize: '2.8rem',
@@ -339,12 +389,47 @@ const styles: Record<string, CSSProperties> = {
     border: '1px solid',
     borderRadius: '12px',
     cursor: 'pointer',
-    fontSize: '1rem',
+    fontSize: '0.9rem',
     transition: 'all 0.3s',
     fontWeight: '600',
     backdropFilter: 'blur(10px)',
     textTransform: 'uppercase',
     letterSpacing: '1px',
+    flex: 1,
+  },
+  travelButton: {
+    padding: '12px 24px',
+    border: '1px solid',
+    borderRadius: '12px',
+    cursor: 'pointer',
+    fontSize: '0.9rem',
+    transition: 'all 0.3s',
+    fontWeight: '700',
+    backdropFilter: 'blur(10px)',
+    textTransform: 'uppercase',
+    letterSpacing: '1px',
+    flex: 1,
+    boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
+  },
+  buttonContainer: {
+    display: 'flex',
+    gap: '15px',
+    width: '100%',
+    maxWidth: '400px',
+    marginTop: '10px',
+    justifyContent: 'center',
+  },
+  travelModalContent: {
+    position: 'relative',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '90vw',
+    maxWidth: '800px',
+    padding: '40px',
+    borderRadius: '32px',
+    border: '1px solid rgba(56, 189, 248, 0.2)',
+    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
   },
   list: {
     display: 'flex',

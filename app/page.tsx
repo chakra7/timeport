@@ -39,9 +39,9 @@ export default function Home() {
   return (
     <main className="min-h-screen">
       {journey ? (
-        <EraDisplay journey={journey} onReset={handleReset} />
+        <EraDisplay journey={journey} onReset={handleReset} onTravel={handleTravel} />
       ) : (
-        <div className="min-h-screen flex items-center justify-center bg-[#1e3a5f] bg-gradient-to-br from-[#1e3a5f] to-[#0d1f2d]">
+        <div className="min-h-screen flex items-center justify-center bg-[#0a0f18]">
           <TimeMachine onTravel={handleTravel} />
         </div>
       )}

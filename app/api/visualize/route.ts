@@ -9,16 +9,28 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Prompt is required' }, { status: 400 });
     }
 
-    // Generate 4 distinct types of images in parallel
+    // Generate 4 highly distinct types of images in parallel
     const variations = [
-      "Wide cinematic landscape or cityscape view",
-      "Street-level view showing daily life and local atmosphere",
-      "Focus on iconic architecture and landmarks",
-      "Close-up detail of cultural artifacts, technology, or interior life"
+      { 
+        desc: "A breathtaking wide-angle panoramic aerial view showing the scale and landscape of",
+        weight: "panoramic, wide-angle, birds-eye view"
+      },
+      { 
+        desc: "A bustling, crowded street-level candid scene showing daily life, people, and local fashion in",
+        weight: "street photography, busy, people, life-like"
+      },
+      { 
+        desc: "A majestic, detailed architectural portrait focusing on a specific grand building or monument in",
+        weight: "architecture, monument, majestic, heroic shot"
+      },
+      { 
+        desc: "An atmospheric, moody close-up focusing on specific tools, technology, or interior domestic details of",
+        weight: "macro, detail, interior, technology, textures"
+      }
     ];
 
-    const imagePromises = variations.map((variation) => 
-      generateEraImage(`${prompt}. View: ${variation}`)
+    const imagePromises = variations.map((v, i) => 
+      generateEraImage(`${v.desc} ${prompt}. Style: ${v.weight}`, Math.floor(Math.random() * 1000000) + i)
     );
     
     const imageUrls = await Promise.all(imagePromises);

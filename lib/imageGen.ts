@@ -6,12 +6,13 @@ import { experimental_generateImage as generateImage } from 'ai';
  * This is a cost-effective, high-speed variant of the Imagen 4 model.
  * Requires GOOGLE_GENERATIVE_AI_API_KEY in .env
  */
-export async function generateEraImage(prompt: string) {
+export async function generateEraImage(prompt: string, seed?: number) {
   try {
     // Ensure GOOGLE_GENERATIVE_AI_API_KEY is set in .env
     const { image } = await generateImage({
       model: google.image('imagen-4.0-fast-generate-001'),
-      prompt: `A high-quality, realistic, cinematic image of: ${prompt}. Atmospheric lighting, historically accurate details, 8k resolution.`,
+      prompt: `A high-quality, realistic, cinematic image. Subject: ${prompt}. Atmospheric lighting, historically accurate details, 8k resolution.`,
+      seed: seed ?? Math.floor(Math.random() * 1000000),
     });
 
     return `data:image/png;base64,${image.base64}`;

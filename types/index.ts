@@ -92,6 +92,7 @@ export interface TimeMachineProps {
 export interface EraDisplayProps {
   journey: JourneyData;
   onReset: () => void;
+  onTravel: (journeyData: JourneyData) => void;
 }
 
 // Internal Types
