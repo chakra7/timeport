@@ -11,7 +11,7 @@ export async function generateEraImage(prompt: string) {
     // Ensure GOOGLE_GENERATIVE_AI_API_KEY is set in .env
     const { image } = await generateImage({
       model: google.image('imagen-4.0-fast-generate-001'),
-      prompt: `A high-quality, realistic, cinematic wide-shot of: ${prompt}. Atmospheric lighting, historically accurate details, 8k resolution.`,
+      prompt: `A high-quality, realistic, cinematic image of: ${prompt}. Atmospheric lighting, historically accurate details, 8k resolution.`,
     });
 
     return `data:image/png;base64,${image.base64}`;

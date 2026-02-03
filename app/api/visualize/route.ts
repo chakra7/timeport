@@ -9,9 +9,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Prompt is required' }, { status: 400 });
     }
 
-    // Generate 4 images in parallel
-    const imagePromises = Array.from({ length: 4 }).map((_, i) => 
-      generateEraImage(`${prompt} variation ${i + 1}`)
+    // Generate 4 distinct types of images in parallel
+    const variations = [
+      "Wide cinematic landscape or cityscape view",
+      "Street-level view showing daily life and local atmosphere",
+      "Focus on iconic architecture and landmarks",
+      "Close-up detail of cultural artifacts, technology, or interior life"
+    ];
+
+    const imagePromises = variations.map((variation) => 
+      generateEraImage(`${prompt}. View: ${variation}`)
     );
     
     const imageUrls = await Promise.all(imagePromises);
