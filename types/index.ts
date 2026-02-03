@@ -69,6 +69,7 @@ export interface EraData {
 export interface ApiPredictionResponse extends EraData {
   context: string;
   imageUrl?: string;
+  imageUrls?: string[];
 }
 
 export interface JourneyData {
@@ -79,6 +80,7 @@ export interface JourneyData {
   formattedYear: string;
   context?: string;
   imageUrl?: string;
+  imageUrls?: string[];
 }
 
 // Component Props

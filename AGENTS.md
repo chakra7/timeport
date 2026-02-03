@@ -7,11 +7,15 @@ TimePort is a full-stack "Time Travel" web application.
 - **Framework**: Next.js 14 with App Router
 - **Frontend**: React 18, TypeScript, Tailwind CSS
 - **Backend**: Next.js API Routes (serverless)
-- **AI**: Integration with Groq (Llama 3.3 70B) for text and Pollinations.ai (Free) for images (Gemini Imagen 4 supported but disabled for cost)
+- **AI**: Integration with Groq (Llama 3.3 70B) for text and Google Gemini (Imagen 4 Fast) for images via Vercel AI SDK
 - **Root Directory**: Contains all application source code (flattened structure)
 
 ## 2. Critical Commands
 All commands should be run from the root directory.
+
+### Operational Assumptions
+- **App Status**: Assume the application is ALWAYS running at `http://localhost:3000`.
+- **Do Not Restart**: Do NOT attempt to run `npm run dev` or restart the server unless explicitly requested by the user.
 
 ### Build and Development
 - **Install**: `npm install`
@@ -71,9 +75,10 @@ All commands should be run from the root directory.
 ## 4. Backend (API Routes)
 - The backend uses Next.js API Routes located at `app/api/predict/route.ts`.
 - It uses Next.js built-in environment variable support (no dotenv needed in API routes).
-- It proxies requests to AI providers (Groq) to protect API keys.
+- It proxies requests to AI providers (Groq, Google Gemini) to protect API keys.
 - **API Response**: Ensure AI responses are cleaned and parsed as valid JSON before sending to the client.
-- **Image Generation**: Uses `lib/imageGen.ts` to call Pollinations.ai (Free). Returns image URLs. (Gemini Imagen 4 optional).
+- **Image Generation**: Uses `lib/imageGen.ts` to call Gemini Imagen 4 Fast. Generates 4 variations per jump.
+- **Gallery**: Displays a multi-image gallery; clicking a thumbnail expands it to full background.
 
 ## 5. Directory Structure
 ```text

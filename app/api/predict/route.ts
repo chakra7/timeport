@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { streamText } from 'ai';
 import { groq } from '@ai-sdk/groq';
-import { generateEraImage } from '@/lib/imageGen';
 
 export async function POST(request: NextRequest) {
   try {
@@ -46,25 +45,15 @@ Make the predictions imaginative but grounded in historical trends or logical fu
       ],
     });
 
-    // Collect the full response
     let fullText = '';
     for await (const delta of result.textStream) {
       fullText += delta;
     }
 
-    // Parse the JSON from the response
     const jsonMatch = fullText.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
       const data = JSON.parse(jsonMatch[0]);
-      
-      // Generate image based on the context
-      // Note: This adds latency, but provides a better experience
-      const imageUrl = await generateEraImage(`${place.name} in the year ${year}. ${data.context}`);
-      
-      return NextResponse.json({
-        ...data,
-        imageUrl: imageUrl || undefined
-      });
+      return NextResponse.json(data);
     } else {
       return NextResponse.json({
         weather: "Mild and temperate",
@@ -82,7 +71,8 @@ Make the predictions imaginative but grounded in historical trends or logical fu
         weather: "Unknown",
         language: "Unknown",
         population: "Unknown",
-        lifeExpectancy: "Unknown"
+        lifeExpectancy: "Unknown",
+        context: "Communication error with the temporal core."
       },
       { status: 500 }
     );

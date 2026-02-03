@@ -16,3 +16,20 @@ export async function fetchPrediction(place: Place, year: number): Promise<ApiPr
   const data = await response.json();
   return data;
 }
+
+export async function fetchVisualization(prompt: string): Promise<{ imageUrls: string[] }> {
+  const response = await fetch('/api/visualize', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ prompt }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+
+  return response.json();
+}
+
